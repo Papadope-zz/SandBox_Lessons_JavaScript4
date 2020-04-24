@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Local Storage API</title>
+</head>
+<body>
+
+  <!-- <iframe src="presence.html" style="width:100vw; height:100vh;" frameborder="0"></iframe>   -->
+  <div>Key/Value pairs: <span id="count">0</span></div>
+  <button id="set">Set</button>
+  <button id="get">Get</button>
+  <button id="clear">Clear</button>
+  <script>
+    if ( window.localStorage ){
+
+      const count = document.getElementById("count");
+      count.innerText = localStorage.length;
+
+      const getBtn = document.getElementById("get");
+      getBtn.addEventListener("click", function(){
+        // Get a value from a key/value pair stored in localStorage
+        console.log( localStorage.getItem("time") );
+      });
+
+      const clearBtn = document.getElementById("clear");
+      clearBtn.addEventListener("click", function(){
+        // Clear all key/value pairs stored in localStorage
+        localStorage.clear();  
+        count.innerText = localStorage.length;
+      });
+
+      const setBtn = document.getElementById("set");
+      setBtn.addEventListener("click", function(){
+        // Set a value from a key/value pair stored in localStorage
+        localStorage.setItem("time", new Date() );
+        count.innerText = localStorage.length;
+      });
+    }
+
+  // To store complex data structures and values in localStorage:
+  // JSON.stringify() is your friend!
+  </script>
+
+</body>
+</html>

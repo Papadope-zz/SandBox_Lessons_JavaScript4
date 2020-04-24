@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  
+  <video controls src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Charlie_Chaplin%2C_the_Marriage_Bond.ogv" /> 
+  <!-- 
+    Exercise: Combining the Media API + Web Storage API (localStorage)
+    - Make sure that you store the current frame at which the video is currently at, in the local storage
+    - Make sure you store the volume level in local storage
+    - When the page loads, the video should load at the point which the user stopped watching, 
+    and the volume level should be at the level that was set by the user just before the page reload
+
+    HINTS:
+    - The video is ready to be manipulated when the 'loadeddata' event is triggered on the element
+    - At what point (event?) can we safely get the current time and store it in localStorage?
+    - At what point (event?) can we safely assume that the 'volume' has 'changed' in order to save 
+    the volume level to localStorage?
+
+    RESOURCES:
+
+    Media API - Media Element Events:
+    https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#Events
+
+    Media API Slides:
+    http://eventloop.gr/frontend/html5/apis.html#/2
+
+    Local Storage API Slides:
+    http://eventloop.gr/frontend/html5/apis.html#/6
+  -->
+
+</body>
+</html>

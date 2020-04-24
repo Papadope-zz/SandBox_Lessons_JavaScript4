@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Get Country from Lat/Lon</title>
+</head>
+<body>
+  <div id="ocuntry">?</div>
+  <script>
+    function getFullURL( lat, lon ){
+      return `https://api.geonames.org/countryCodeJSON?lat=${lat}&lng=${lon}&username=jackd`;  
+    }
+    async function geoSuccess( position ){
+      const URL = getFullURL(
+        position.coords.latitude.toFixed(3),
+        position.coords.longitude.toFixed(3) 
+      );
+      console.log( URL );
+      try {
+        const response = await fetch( URL );
+        const data = await response.json();
+        console.log( "Country:", data );
+      } catch(e){
+        console.log("Error:", e);
+      }
+    }
+    function geoError( err ){
+      console.log( "Error: ", err );
+    }
+    if ( navigator.geolocation ){
+      navigator.geolocation.getCurrentPosition( geoSuccess, geoError );
+    } else {
+
+    }
+
+  </script>
+</body>
+</html>

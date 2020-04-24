@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- OpenLayers Quickstart: https://openlayers.org/en/latest/doc/quickstart.html -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/css/ol.css" type="text/css">
+  <style>
+    .map {
+      height: 200px;
+      width: 100%;
+      border: 2px solid orange;
+      overflow: hidden;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+</head>
+<body>
+
+<pre hidden>
+  When the user presses the button, 
+  the geolocation get the current position 
+  and displays the map centered around your geolocation.
+
+  Things to watch out for: 
+  - The map must be deactivated at first
+  - The geolocation must be activated only after the button click
+  - getCurrentPosition is ASYNCHRONOUS
+  - Watch our for the order to lat, lon
+  - On subsequent clicks, the app must get our geolocation and display a NEW map,
+  with the latest lat, lon
+
+  Quickstart (Open Layers): https://openlayers.org/en/latest/doc/quickstart.html
+</pre>
+  <div id="location">Location: ?</div>
+  <!-- <iframe src="presence.html" style="width:100vw; height:100vh;" frameborder="0"></iframe>   -->
+  <div id="map" class="map"></div>
+  <button id="get_location">Get Location</button>
+  <script>
+    // IIFE: https://developer.mozilla.org/en-US/docs/Glossary/IIFE
+    (function instant(){ // This function can also be anonymous.
+          console.log("IIFE");
+         // instant(); // Function reference ONLY available inside the function
+    }());
+
+    (function geoApp(){
+
+      const getLocationBtn = document.querySelector("#get_location");
+      const mapContainer = document.getElementById("map");
+      // ES6 Default Parameters: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters
+      // function showMap( lat, lon, zoom = 6 ){
+      function showMap( lat, lon, zoom ){
+        if ( typeof zoom === "undefined" ){
+          zoom = 6;
+        }
+        mapContainer.innerHTML = "";
+        const map = new ol.Map({
+          target: 'map',
+          layers: [
+            new ol.layer.Tile({
+              source: new ol.source.OSM()
+            })
+          ],
+          view: new ol.View({
+            center: ol.proj.fromLonLat([lon, lat]),
+            zoom: zoom
+          })
+        });
+      }
+      function geoSuccess( geoData ){
+          console.log( "geoSuccess:", geoData );
+          const coords = geoData.coords;
+          console.log( coords.latitude, coords.longitude );
+          showMap( coords.latitude, coords.longitude, 18 );
+        }
+      function geoError( error ){
+          console.log( "Error:", error.message, error.code );
+          // https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError
+          // 1 Permissions
+          // 2 Unable
+          // 3 timeout
+        }
+
+      if ( navigator.geolocation ){
+
+        getLocationBtn.addEventListener("click", handleGetLocation );
+        function handleGetLocation(){
+          console.log("geolocation supported");
+          navigator.geolocation.getCurrentPosition( geoSuccess, geoError );
+        }
+
+      } else {
+
+          getLocationBtn.setAttribute("disabled", true);
+          console.error("Error: geolocation not supported");
+
+      }
+
+    })();
+  </script>
+
+</body>
+</html>

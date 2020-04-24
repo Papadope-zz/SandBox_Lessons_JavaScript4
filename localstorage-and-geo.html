@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <!-- OpenLayers Quickstart: https://openlayers.org/en/latest/doc/quickstart.html -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/css/ol.css"
+      type="text/css"
+    />
+    <style>
+      .map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+  </head>
+  <body>
+    <!-- <iframe src="presence.html" style="width:100vw; height:100vh;" frameborder="0"></iframe>   -->
+    <div id="map" class="map"></div>
+    <button>Get Location</button><span id="output"></span>
+    <script>
+      // Get a reference to the <button> element
+      const getBtn = document.querySelector("button");
+
+      // Wrap the OpenLayers map code in a function that accepts a lat and a lon argument
+      function showMapFromLatLon(lat, lon) {
+        const map = new ol.Map({
+          target: "map",
+          layers: [
+            new ol.layer.Tile({
+              source: new ol.source.OSM()
+            })
+          ],
+          view: new ol.View({
+            center: ol.proj.fromLonLat([lon, lat]),
+            zoom: 10
+          })
+        });
+      }
+
+      function geoSuccess(geoData) {
+
+        // Get the coords property from the Geolocation Position Data
+        const coords = geoData.coords;
+
+       // Create object with the lat and lon, and pass it to JSON.stringify to get a String representation: 
+        const coordsJSON = JSON.stringify({
+          lat: coords.latitude,
+          lon: coords.longitude
+        });
+
+        if ( localStorage ){
+          // Store our coords JSON
+          localStorage.setItem( "coords", coordsJSON );
+          // Notify the user
+          document.querySelector("#output").innerText = " Coords saved in localStorage. Try hitting refresh,"
+        }
+
+        // Display the map with our geolocation coordinates
+        showMapFromLatLon( coords.latitude, coords.longitude );
+      }
+
+      function geoError(error) {
+        console.log("Error:", error.message, error.code);
+      }
+
+      if ( localStorage ){
+        
+        // Search for a key named 'coords' in the localStorage:
+        const coordsJSON = localStorage.getItem("coords");
+
+        // If we found the key (might be null)...
+        if ( coordsJSON ){
+
+          // Get the JSON string and turn it back to its original value
+          const coords = JSON.parse( coordsJSON );
+
+          // We need to disable the button, since we already have the coords
+          getBtn.setAttribute("disabled", true);
+
+          // Show the map to the user
+          showMapFromLatLon( coords.lat, coords.lon );
+        }
+      }
+
+      if (navigator.geolocation) {
+
+        // On click, get our geolocation:
+        getBtn.addEventListener("click", function(){
+          navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+        });
+
+      } else {
+        console.error("Error: geolocation not supported");
+      }
+    </script>
+  </body>
+</html>
